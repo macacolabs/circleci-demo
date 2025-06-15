@@ -1,4 +1,5 @@
 # .circleci/config.yml
+---
 version: 2.1
 
 jobs:
@@ -6,14 +7,16 @@ jobs:
     machine:
       image: ubuntu-2204:current
     steps:
-      - add_ssh_keys:
-          fingerprints:
-            - "SHA256:P21MIn5VuvOJ3oHSyrHvHS8mareusEfwau4cAN4y/O0"
+      - checkout
       - run:
-          name: Run Ansible Playbook
+          name: Install Ansible
           command: |
-            ssh -o StrictHostKeyChecking=no vagrant@192.168.56.10 \
-              "ansible-playbook /vagrant/playbooks/install-nginx.yml"
+            sudo apt update
+            sudo apt install -y ansible
+      - run:
+          name: Run Ansible Playbook on localhost
+          command: |
+            ansible-playbook playbooks/install-nginx.yml -i "localhost," -c local
 
 workflows:
   deploy-on-push:

@@ -3,22 +3,17 @@
 version: 2.1
 
 jobs:
-  deploy:
+  notify:
     machine:
       image: ubuntu-2204:current
     steps:
       - checkout
       - run:
-          name: Install Ansible
+          name: Confirm Push and Display Message
           command: |
-            sudo apt update
-            sudo apt install -y ansible
-      - run:
-          name: Run Ansible Playbook on localhost
-          command: |
-            ansible-playbook playbooks/install-nginx.yml -i "localhost," -c local
+            echo "변경 사항이 푸시되었습니다. Ansible을 로컬에서 실행하세요."
 
 workflows:
   deploy-on-push:
     jobs:
-      - deploy
+      - notify
